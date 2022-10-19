@@ -1,5 +1,10 @@
 import dns.resolver
-from modules.commons.messages import DNS_QUERY_NAME_NOT_EXISTS, NOT_FOUND
+from modules.commons.messages import (
+    ALL_NAME_SERVERS_FAILED,
+    CHECK_YOUR_INTERNET_CONNECTION,
+    DNS_QUERY_NAME_NOT_EXISTS,
+    NOT_FOUND,
+)
 from modules.commons.utils import print_and_exit
 
 DNS_RECORD_TYPE = "A"
@@ -8,8 +13,8 @@ NOT_FOUND_STATUS_CODE = "404"
 RESOLVER = dns.resolver.Resolver()
 
 def execute_subdomain_bruteforce(target_host, word_list_path):
-    word_list_lines = _get_word_list_lines(word_list_path)
     print()
+    word_list_lines = _get_word_list_lines(word_list_path)
     for subdomain_to_test in word_list_lines:
         subdomain = "{}.{}".format(subdomain_to_test, target_host)
         try:
@@ -17,10 +22,11 @@ def execute_subdomain_bruteforce(target_host, word_list_path):
             for ip_address in ip_addresses:
                 _print_response(subdomain, ip_address)
         except Exception as error:
-            if error.__class__().args[0] == DNS_QUERY_NAME_NOT_EXISTS:
+            class_error = error.__class__()
+            if class_error.args[0] == DNS_QUERY_NAME_NOT_EXISTS:
                 _print_response(subdomain, NOT_FOUND, NOT_FOUND_STATUS_CODE)
-            else:
-                print(error.args[1])
+            elif class_error.args[0] == ALL_NAME_SERVERS_FAILED:
+                print_and_exit(CHECK_YOUR_INTERNET_CONNECTION, 1)
 
 def _print_response(subdomain, ip_address, status_code = OK_STATUS_CODE):
     print("{} | {} => {}".format(status_code, subdomain, ip_address))
