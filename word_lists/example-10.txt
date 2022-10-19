@@ -1,0 +1,10 @@
+admin
+code
+contact
+data
+demo
+finance
+home
+news
+services
+tech
