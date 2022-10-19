@@ -8,7 +8,7 @@ NOT_FOUND_STATUS_CODE = "404"
 RESOLVER = dns.resolver.Resolver()
 
 def execute_subdomain_bruteforce(target_host_or_ipv4, word_list_path):
-    word_list_lines = _get_wordlist_lines(word_list_path)
+    word_list_lines = _get_word_list_lines(word_list_path)
     print()
     for subdomain_to_test in word_list_lines:
         subdomain = "{}.{}".format(subdomain_to_test, target_host_or_ipv4)
@@ -25,7 +25,7 @@ def execute_subdomain_bruteforce(target_host_or_ipv4, word_list_path):
 def _print_response(subdomain, ip_address, status_code = OK_STATUS_CODE):
     print("{} | {} => {}".format(status_code, subdomain, ip_address))
 
-def _get_wordlist_lines(word_list_path):
+def _get_word_list_lines(word_list_path):
     try:
         with open(word_list_path, "r") as word_list:
             return word_list.read().splitlines()
