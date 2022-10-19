@@ -11,7 +11,7 @@ def main():
         print_and_exit(HELP, 0)
     elif argv[1] == "--sb":
         execute_subdomain_bruteforce(
-            input("host name or IPV4: "),
+            input("host name: "),
             input("word list path: "),
         )
 

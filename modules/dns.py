@@ -7,11 +7,11 @@ OK_STATUS_CODE = "200"
 NOT_FOUND_STATUS_CODE = "404"
 RESOLVER = dns.resolver.Resolver()
 
-def execute_subdomain_bruteforce(target_host_or_ipv4, word_list_path):
+def execute_subdomain_bruteforce(target_host, word_list_path):
     word_list_lines = _get_word_list_lines(word_list_path)
     print()
     for subdomain_to_test in word_list_lines:
-        subdomain = "{}.{}".format(subdomain_to_test, target_host_or_ipv4)
+        subdomain = "{}.{}".format(subdomain_to_test, target_host)
         try:
             ip_addresses = RESOLVER.resolve(subdomain, DNS_RECORD_TYPE)
             for ip_address in ip_addresses:
