@@ -3,8 +3,8 @@
 DNS toolbox
 
 ### done/planned
-[x] subdomain bruteforce
-[ ] DNS zone transfer (AXFR)
+- [x] subdomain bruteforce<br>
+- [ ] DNS zone transfer (AXFR)
 
 ### requirements 
 - python3
