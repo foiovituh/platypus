@@ -22,10 +22,10 @@ def execute_subdomain_bruteforce(target_host, word_list_path):
             for ip_address in ip_addresses:
                 _print_response(subdomain, ip_address)
         except Exception as error:
-            class_error = error.__class__()
-            if class_error.args[0] == DNS_QUERY_NAME_NOT_EXISTS:
+            error_message = error.__class__().args[0]
+            if error_message == DNS_QUERY_NAME_NOT_EXISTS:
                 _print_response(subdomain, NOT_FOUND, NOT_FOUND_STATUS_CODE)
-            elif class_error.args[0] == ALL_NAME_SERVERS_FAILED:
+            elif error_message == ALL_NAME_SERVERS_FAILED:
                 print_and_exit(CHECK_YOUR_INTERNET_CONNECTION, 1)
 
 def _print_response(subdomain, ip_address, status_code = OK_STATUS_CODE):

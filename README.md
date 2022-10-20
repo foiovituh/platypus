@@ -12,7 +12,7 @@ DNS toolbox
 ### usage
 ```
 python3 platypus.py [module type]
-    MODULES: --sb (DNS subdomain bruteforce) [word list path]
+    MODULES: --sb (DNS subdomain bruteforce)
     EXAMPLE: python3 platypus.py --sb
       host name: google.com
       word list path: word_lists/example-10.txt
