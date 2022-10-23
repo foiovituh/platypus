@@ -13,7 +13,7 @@ HELP = "USAGE: python3 platypus.py [module type] [optional flags...]\n" \
     "  python3 platypus.py --sb\n" \
     "  host name: google.com\n" \
     "  word list path: word_lists/example-10.txt\n\n" \
-    "  python3 platypus.py --sb --a\n" \
+    "  python3 platypus.py --ps --a\n" \
     "  host name: bancocn.com\n" \
     "  timeout: 0.05\n" \
     "FOR MORE INFORMATION, SEE: https://github.com/foiovituh/platypus"
