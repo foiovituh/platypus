@@ -16,7 +16,6 @@ TOOLS = {
 }
 
 def _main():
-
     try:
         SELECTOR = argv[1]
     except IndexError as index_error:
