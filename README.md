@@ -16,7 +16,8 @@ generic information gathering scanner
 
 ### usage
 ```
-USAGE: python3 platypus.py [module type] [optional flags...]
+python3 platypus.py [module type] [optional flags...]
+
 MODULES:
   --sb (DNS subdomain bruteforce)
   --ps (Port scan) [--all, 65536 ports, optional] [--v, verbose, optional]
