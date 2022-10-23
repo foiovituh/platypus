@@ -34,13 +34,16 @@ def _main():
         port_scan(
             _get_host_name(),
             input("timeout: "),
-            argv.__contains__("--all"),
-            argv.__contains__("--v"),
+            _check_optional_selector("--all"),
+            _check_optional_selector("--v"),
         )
 
 
 def _get_host_name():
     return input("host name: ")
+
+def _check_optional_selector(selector):
+    return argv.__contains__(selector)
 
 if __name__ == "__main__":
     print_figlet("platypus", "standard")
