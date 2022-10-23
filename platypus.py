@@ -27,7 +27,7 @@ def _main():
         print_and_exit(INVALID_ARGUMENTS, 1)
     elif SELECTOR == TOOLS["subdomain_bruteforce"]:
         execute_subdomain_bruteforce(
-            _get_host_name,
+            _get_host_name(),
             input("word list path: "),
         )
     elif SELECTOR == TOOLS["port_scan"]:
