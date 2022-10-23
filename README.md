@@ -1,9 +1,10 @@
 ### platypus 🦆
 
-DNS toolbox
+generic information gathering scanner
 
 ### done/planned
 - [x] subdomain bruteforce<br>
+- [x] port scanning<br>
 - [ ] DNS zone transfer (AXFR)
 
 ### requirements 
