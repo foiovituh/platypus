@@ -1,35 +1,101 @@
-### platypus 🦆
+# 🦆 Platypus
+![GitHub License](https://img.shields.io/github/license/foiovituh/platypus)
+![GitHub Release](https://img.shields.io/github/v/release/foiovituh/platypus)
 
-generic information gathering scanner
+> A command-line reconnaissance tool for DNS enumeration and TCP port scanning.
 
-### done/planned
-- [x] subdomain bruteforce<br>
-- [x] port scanning<br>
-- [ ] DNS zone transfer (AXFR)
+## 📦 Installation
 
-### requirements 
-- python3
-- pip3
+```bash
+git clone https://github.com/foiovituh/platypus.git
+cd platypus
 
-### setup
-- pip3 install -r requirements.txt
+python3 -m venv .venv
+source .venv/bin/activate
 
-### usage
+python -m pip install --upgrade pip
+pip install -e .
 ```
-python3 platypus.py [module type] [optional flags...]
 
-MODULES:
-  --sb (DNS subdomain bruteforce)
-  --ps (Port scan) [--all, 65536 ports, optional] [--v, verbose, optional]
-    DEFAULT_PORTS_TO_BE_SCANNED:
-      21, 22, 23, 25, 26, 53, 80, 110, 143,
-      443, 587, 993, 995, 2082, 2083, 3306, 8080
-EXAMPLES:
-  python3 platypus.py --sb
-  host name: google.com
-  word list path: word_lists/example-10.txt
+### Development environment
 
-  python3 platypus.py --ps --all
-  host name: bancocn.com
-  timeout: 0.05
+Install development dependencies:
+
+```bash
+pip install -e ".[dev]"
 ```
+
+## 🚀 Usage
+
+### Help
+
+```bash
+platypus --help
+```
+
+### DNS Subdomain Bruteforce
+
+```bash
+platypus --sb <host> <wordlist>
+```
+
+Example:
+
+```bash
+platypus --sb example.com word_lists/tiny-10.txt
+```
+
+### TCP Port Scan
+
+```bash
+platypus --ps <host>
+```
+
+Example:
+
+```bash
+platypus --ps 192.168.1.1
+```
+
+## 🧪 Development
+
+Run the test suite:
+
+```bash
+pytest
+```
+
+Generate a coverage report:
+
+```bash
+pytest --cov=platypus --cov-report=term-missing
+```
+
+Run Ruff:
+
+```bash
+ruff check . --fix
+ruff format .
+```
+
+## 🗺️ Roadmap
+
+- [x] DNS subdomain bruteforce
+- [x] TCP port scanner
+- [ ] Custom timeout
+- [ ] UDP port scan
+- [ ] Banner grabbing
+- [ ] DNS record enumeration
+- [ ] Reverse DNS lookup
+- [ ] IPv6 support
+- [ ] Subcommands (`platypus dns`, `platypus port`)
+- [ ] Parallel execution
+- [ ] Service detection
+
+## ⭐ Support the Project
+
+If you like this project or find it useful, please give it a star! It helps increase its visibility and supports future development.
+
+## 📄 License
+
+Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information.

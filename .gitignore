@@ -1,2 +1,18 @@
-modules/__pycache__/
-modules/commons/__pycache__/
+# Virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Pytest
+.pytest_cache/
+
+# Coverage
+.coverage
+
+# Packaging
+*.egg-info/
+
+# Ruff
+.ruff_cache/
