@@ -4,7 +4,11 @@
 
 > A command-line reconnaissance tool for DNS enumeration and TCP port scanning.
 
+![Image](https://github.com/user-attachments/assets/9984e089-5945-40ef-a754-98d3c2e76d30)
+
 ## 📦 Installation
+
+Clone the repository and create a virtual environment:
 
 ```bash
 git clone https://github.com/foiovituh/platypus.git
@@ -12,9 +16,21 @@ cd platypus
 
 python3 -m venv .venv
 source .venv/bin/activate
+```
 
+Install the dependencies:
+
+```bash
 python -m pip install --upgrade pip
-pip install -e .
+python -m pip install -e .
+```
+
+`python -m pip` ensures that pip is executed using the currently active Python interpreter. You can also use `pip` directly if your environment is correctly configured.
+
+To use Platypus in a new terminal session, activate the virtual environment again:
+
+```bash
+source .venv/bin/activate
 ```
 
 ### Development environment
@@ -22,7 +38,7 @@ pip install -e .
 Install development dependencies:
 
 ```bash
-pip install -e ".[dev]"
+python -m pip install -e ".[dev]"
 ```
 
 ## 🚀 Usage
