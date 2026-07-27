@@ -2,10 +2,7 @@
 ![GitHub License](https://img.shields.io/github/license/foiovituh/platypus)
 ![GitHub Release](https://img.shields.io/github/v/release/foiovituh/platypus)
 
-> 🛡️ A lightweight information gathering tool featuring DNS subdomain bruteforce and TCP port scanning.
-
-<!-- Add a terminal screenshot or GIF here -->
-<!-- ![Image](https://...) -->
+> A command-line reconnaissance tool for DNS enumeration and TCP port scanning.
 
 ## 📦 Installation
 
@@ -79,18 +76,6 @@ Run Ruff:
 ```bash
 ruff check . --fix
 ruff format .
-```
-
-## 📁 Project Structure
-
-```text
-.
-├── src/
-│   └── platypus/
-├── tests/
-├── word_lists/
-├── pyproject.toml
-└── README.md
 ```
 
 ## 🗺️ Roadmap
