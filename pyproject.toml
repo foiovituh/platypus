@@ -2,32 +2,29 @@
 requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
-
 [project]
 name = "platypus"
-version = "1.0.0"
-description = "Generic information gathering scanner"
+version = "2.0.0"
+description = "security enumeration tool"
 authors = [
     { name = "foiovituh" }
 ]
 license = { file = "LICENSE" }
 requires-python = ">=3.12"
-
 dependencies = [
-    "dnspython==2.2.1",
-    "pyfiglet==1.0.4",
+    "dnspython",
+    "httpx",
 ]
-
 
 [project.optional-dependencies]
 dev = [
-    "pytest==8.4.2",
+    "pytest",
+    "pytest-cov",
+    "ruff",
 ]
-
 
 [project.scripts]
 platypus = "platypus.cli:main"
-
 
 [tool.setuptools.packages.find]
 where = ["src"]

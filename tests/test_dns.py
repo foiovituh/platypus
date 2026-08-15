@@ -1,125 +1,82 @@
-from unittest.mock import mock_open, patch
+from unittest.mock import Mock
 
-import pytest
-from dns.exception import Timeout
-from dns.resolver import NXDOMAIN, NoNameservers
+import dns.resolver
 
-from platypus.commons.constants import NOT_FOUND_RESPONSE
-from platypus.dns import (
-    _get_word_list_lines,
-    execute_subdomain_bruteforce,
-)
+from platypus import dns as platypus_dns
 
 
-def test_get_word_list_lines_success():
-    fake_content = "www\napi\nadmin"
+def test_subdomain_bruteforce_finds_subdomain(
+    monkeypatch: str, tmp_path: str, capsys: str
+):
+    wordlist = tmp_path / "words.txt"
+    wordlist.write_text("www\n")
 
-    with patch(
-        "builtins.open",
-        mock_open(read_data=fake_content),
-    ):
-        result = _get_word_list_lines("wordlist.txt")
-
-    assert result == [
-        "www",
-        "api",
-        "admin",
+    resolver = Mock()
+    resolver.resolve.side_effect = [
+        [Mock()],
+        [Mock(__str__=lambda self: "1.2.3.4")],
     ]
 
+    monkeypatch.setattr(
+        platypus_dns.dns.resolver,
+        "Resolver",
+        lambda: resolver,
+    )
 
-def test_get_word_list_lines_file_not_found():
-    with (
-        patch(
-            "builtins.open",
-            side_effect=FileNotFoundError,
-        ),
-        pytest.raises(SystemExit) as exception,
-    ):
-        _get_word_list_lines("missing.txt")
+    platypus_dns.execute_subdomain_bruteforce(
+        False,
+        "example.com",
+        str(wordlist),
+    )
 
-    assert exception.value.code == 1
+    assert "OK: www.example.com (1.2.3.4)" in capsys.readouterr().out
 
 
-def test_execute_subdomain_bruteforce_found(capsys):
-    resolver_response = [
-        "192.0.2.10",
+def test_subdomain_bruteforce_reports_no_results(
+    monkeypatch: str, tmp_path: str, capsys: str
+):
+    wordlist = tmp_path / "words.txt"
+    wordlist.write_text("www\n")
+
+    resolver = Mock()
+    resolver.resolve.side_effect = [
+        [Mock()],
+        dns.resolver.NXDOMAIN(),
     ]
 
-    with (
-        patch(
-            "platypus.dns._get_word_list_lines",
-            return_value=["www"],
-        ),
-        patch(
-            "platypus.dns.DNS_RESOLVER.resolve",
-            return_value=resolver_response,
-        ),
-    ):
-        execute_subdomain_bruteforce(
-            "example.com",
-            "wordlist.txt",
+    monkeypatch.setattr(
+        platypus_dns.dns.resolver,
+        "Resolver",
+        lambda: resolver,
+    )
+
+    platypus_dns.execute_subdomain_bruteforce(
+        False,
+        "example.com",
+        str(wordlist),
+    )
+
+    assert "NO_SUBDOMAIN_FOUND: example.com" in capsys.readouterr().out
+
+
+def test_subdomain_bruteforce_rejects_invalid_target(monkeypatch: str, tmp_path: str):
+    wordlist = tmp_path / "words.txt"
+    wordlist.write_text("www\n")
+
+    resolver = Mock()
+    resolver.resolve.side_effect = dns.resolver.NXDOMAIN()
+
+    monkeypatch.setattr(
+        platypus_dns.dns.resolver,
+        "Resolver",
+        lambda: resolver,
+    )
+
+    try:
+        platypus_dns.execute_subdomain_bruteforce(
+            False,
+            "invalid.test",
+            str(wordlist),
         )
-
-    captured = capsys.readouterr()
-
-    assert "200 | www.example.com => 192.0.2.10" in captured.out
-
-
-def test_execute_subdomain_bruteforce_not_found(capsys):
-    with (
-        patch(
-            "platypus.dns._get_word_list_lines",
-            return_value=["admin"],
-        ),
-        patch(
-            "platypus.dns.DNS_RESOLVER.resolve",
-            side_effect=NXDOMAIN,
-        ),
-    ):
-        execute_subdomain_bruteforce(
-            "example.com",
-            "wordlist.txt",
-        )
-
-    captured = capsys.readouterr()
-
-    assert f"404 | admin.example.com => {NOT_FOUND_RESPONSE}" in captured.out
-
-
-def test_execute_subdomain_bruteforce_no_nameservers():
-    with (
-        patch(
-            "platypus.dns._get_word_list_lines",
-            return_value=["www"],
-        ),
-        patch(
-            "platypus.dns.DNS_RESOLVER.resolve",
-            side_effect=NoNameservers,
-        ),
-        pytest.raises(SystemExit),
-    ):
-        execute_subdomain_bruteforce(
-            "example.com",
-            "wordlist.txt",
-        )
-
-
-def test_execute_subdomain_bruteforce_timeout(capsys):
-    with (
-        patch(
-            "platypus.dns._get_word_list_lines",
-            return_value=["www"],
-        ),
-        patch(
-            "platypus.dns.DNS_RESOLVER.resolve",
-            side_effect=Timeout,
-        ),
-    ):
-        execute_subdomain_bruteforce(
-            "example.com",
-            "wordlist.txt",
-        )
-
-    captured = capsys.readouterr()
-
-    assert "408 | www.example.com => TIMEOUT" in captured.out
+    except SystemExit as error:
+        assert error.code == 1

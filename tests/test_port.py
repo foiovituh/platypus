@@ -1,97 +1,59 @@
-from unittest.mock import MagicMock, patch
-
 import pytest
 
-from platypus.port import execute_port_scan
+from platypus import port
 
 
-def test_execute_port_scan_open_port(capsys):
-    socket_mock = MagicMock()
+def test_port_scan_uses_common_ports(monkeypatch: str, capsys: str):
+    scanned = []
 
-    socket_mock.__enter__.return_value.connect_ex.return_value = 0
+    class FakeSocket:
+        def __enter__(self):
+            return self
 
-    with (
-        patch(
-            "platypus.port.socket.socket",
-            return_value=socket_mock,
-        ),
-        patch(
-            "platypus.port.COMMON_PORTS",
-            [80],
-        ),
-    ):
-        execute_port_scan(
-            "localhost",
-            "0.5",
-            False,
-            False,
-        )
+        def __exit__(self, *args):
+            pass
 
-    captured = capsys.readouterr()
+        def settimeout(self, timeout):
+            pass
 
-    assert "OPEN | localhost => 80" in captured.out
+        def connect_ex(self, address):
+            scanned.append(address[1])
+            return 0
+
+    monkeypatch.setattr(port.socket, "socket", lambda *args: FakeSocket())
+
+    port.execute_port_scan("localhost")
+
+    assert scanned == list(port.COMMON)
+    assert "OPEN: 21" in capsys.readouterr().out
 
 
-def test_execute_port_scan_closed_port_verbose(capsys):
-    socket_mock = MagicMock()
+def test_port_scan_uses_custom_ports(monkeypatch: str):
+    scanned = []
 
-    socket_mock.connect_ex.return_value = 1
+    class FakeSocket:
+        def __enter__(self):
+            return self
 
-    with (
-        patch(
-            "platypus.port.socket.socket",
-            return_value=socket_mock,
-        ),
-        patch(
-            "platypus.port.COMMON_PORTS",
-            [80],
-        ),
-    ):
-        execute_port_scan(
-            "localhost",
-            "0.5",
-            False,
-            True,
-        )
+        def __exit__(self, *args):
+            pass
 
-    captured = capsys.readouterr()
+        def settimeout(self, timeout):
+            pass
 
-    assert "CLOSED | localhost => 80" in captured.out
+        def connect_ex(self, address):
+            scanned.append(address[1])
+            return 0
+
+    monkeypatch.setattr(port.socket, "socket", lambda *args: FakeSocket())
+
+    port.execute_port_scan("localhost", ports="2,3,7")
+
+    assert scanned == [2, 3, 7]
 
 
-def test_execute_port_scan_invalid_timeout():
-    with pytest.raises(SystemExit) as exception:
-        execute_port_scan(
-            "localhost",
-            "abc",
-            False,
-            False,
-        )
+def test_port_scan_rejects_invalid_ports():
+    with pytest.raises(SystemExit) as error:
+        port.execute_port_scan("localhost", ports="2,x,7")
 
-    assert exception.value.code == 1
-
-
-def test_execute_port_scan_socket_error():
-    socket_mock = MagicMock()
-
-    socket_mock.__enter__.return_value.connect_ex.side_effect = OSError(
-        "connection error"
-    )
-
-    with (
-        patch(
-            "platypus.port.socket.socket",
-            return_value=socket_mock,
-        ),
-        patch(
-            "platypus.port.COMMON_PORTS",
-            [80],
-        ),
-        pytest.raises(SystemExit),
-    ):
-        execute_port_scan(
-            "localhost",
-            "0.5",
-            False,
-            False,
-        )
+    assert error.value.code == 1
