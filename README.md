@@ -4,7 +4,7 @@
 
 > A personal command-line tool for security enumeration.
 
-![Image](https://github.com/user-attachments/assets/9984e089-5945-40ef-a754-98d3c2e76d30)
+![Image](https://github.com/user-attachments/assets/eeae4a7b-4eae-4576-b80d-04b8cdb96396)
 
 ## 📦 Installation
 
