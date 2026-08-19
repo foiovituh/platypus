@@ -8,27 +8,25 @@
 
 ## 📦 Installation
 
-Clone the repository and create a virtual environment:
+### From GitHub
+
+Clone the repository and install Platypus:
 
 ```bash
 git clone https://github.com/foiovituh/platypus.git
 cd platypus
 
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-Install Platypus:
-
-```bash
-python -m pip install -e .
+python3 -m pip install .
 ```
 
 ### Development environment
 
-Install development dependencies:
+Create a virtual environment and install development dependencies:
 
 ```bash
+python3 -m venv .venv
+source .venv/bin/activate
+
 python -m pip install -e ".[dev]"
 ```
 
